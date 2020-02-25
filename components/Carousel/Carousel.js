@@ -17,3 +17,68 @@
     <div class="right-button"> > </div>
   </div>
 */
+
+// wrap index for infinite scrolling
+const wrapIndex = (nextIndex, imageCount) => {
+  if (nextIndex >= imageCount) {
+    return 0;
+  }
+
+  if (nextIndex < 0) {
+    return imageCount - 1;
+  }
+
+  return nextIndex;
+};
+
+//event listener for btn
+const updateCurrentImage = (imgs, currentIndex, nextIndex) => {
+  imgs[currentIndex].classList.remove('current');
+  imgs[nextIndex].classList.add('current');
+}
+
+//create a carousel component
+const createCarousel = () => {
+  const cr = document.createElement('div');
+    cr.classList.add('carousel');
+
+    const leftBtn = document.createElement('div');
+    leftBtn.classList.add('left-button');
+    leftBtn.textContent = ' < ';
+    cr.appendChild(leftBtn);
+
+    const imgs = ['./assets/carousel/mountains.jpeg','./assets/carousel/computer.jpeg','./assets/carousel/trees.jpeg','./assets/carousel/turntable.jpeg'];
+
+    const cImages = imgs.map(img => {
+      const cImage = document.createElement('img');
+      cImage.src = img;
+      cr.appendChild(cImage);
+
+      return cImage;
+    });
+
+    cImages[0].classList.toggle('current');
+
+    const rightBtn = document.createElement('div');
+    rightBtn.classList.add('right-button');
+    rightBtn.textContent = ' > ';
+    cr.appendChild(rightBtn);
+
+
+    let current = 0;
+
+    rightBtn.addEventListener('click', () => {
+      const nextIndex = wrapIndex(current + 1, cImages.length);
+      updateCurrentImage(cImages, current, nextIndex);
+      current = nextIndex;
+    })
+
+    leftBtn.addEventListener('click', () => {
+      const nextIndex = wrapIndex(current - 1, cImages.length);
+      updateCurrentImage(cImages, current, nextIndex);
+      current = nextIndex;
+    })
+    return cr;
+}
+
+document.querySelector('.carousel-container').appendChild(createCarousel());
